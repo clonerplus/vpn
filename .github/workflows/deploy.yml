@@ -1,0 +1,32 @@
+name: Deploy VPN Services
+
+on:
+  push:
+    branches: [master, main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app:
+          - vless-server
+          - vless-reality
+          - ss-server
+          - vpn-gateway
+          - vpn-api
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
+
+      - name: Deploy ${{ matrix.app }}
+        run: kubectl apply -k ${{ matrix.app }}/overlays/stage

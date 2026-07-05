@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ss-server
+  labels:
+    app: ss-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ss-server
+  template:
+    metadata:
+      labels:
+        app: ss-server
+    spec:
+      containers:
+        - name: xray
+          image: ghcr.io/xtls/xray-core:1.8.24
+          command: ["xray", "run", "-c", "/etc/xray/config.json"]
+          ports:
+            - name: ss-ws
+              containerPort: 80
+              protocol: TCP
+            - name: ss-tor
+              containerPort: 9050
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /etc/xray
+              readOnly: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+      volumes:
+        - name: config
+          configMap:
+            name: ss-config

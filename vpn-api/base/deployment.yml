@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vpn-api
+  labels:
+    app: vpn-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vpn-api
+  template:
+    metadata:
+      labels:
+        app: vpn-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/outi-ops/vpn-api:latest
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: VLESS_SERVER
+              value: "vless.outi.ir"
+            - name: VLESS_PORT
+              value: "443"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/vpn-api
+              readOnly: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+      volumes:
+        - name: config
+          configMap:
+            name: vpn-api-config

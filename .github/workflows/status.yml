@@ -1,0 +1,30 @@
+name: Check Status
+
+on:
+  workflow_dispatch:
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
+
+      - name: Get all resources
+        run: kubectl get all -n vless
+
+      - name: Get pods status
+        run: kubectl get pods -n vless -o wide
+
+      - name: Get services
+        run: kubectl get svc -n vless
+
+      - name: Get ingress
+        run: kubectl get ingress -n vless

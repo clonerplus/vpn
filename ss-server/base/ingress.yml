@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ss-server
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/websocket-services: "ss-server"
+spec:
+  tls:
+    - hosts:
+        - ss.outi.ir
+        - anon-ss.outi.ir
+      secretName: ss-server-tls
+  rules:
+    - host: ss.outi.ir
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ss-server
+                port:
+                  number: 80
+    - host: anon-ss.outi.ir
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ss-server
+                port:
+                  number: 9050

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ss-server
+  labels:
+    app: ss-server
+spec:
+  type: ClusterIP
+  selector:
+    app: ss-server
+  ports:
+    - name: ss-ws
+      port: 80
+      targetPort: ss-ws
+      protocol: TCP
+    - name: ss-tor
+      port: 9050
+      targetPort: ss-tor
+      protocol: TCP

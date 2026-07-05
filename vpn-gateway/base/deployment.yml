@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vpn-gateway
+  labels:
+    app: vpn-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vpn-gateway
+  template:
+    metadata:
+      labels:
+        app: vpn-gateway
+    spec:
+      containers:
+        - name: wireguard
+          image: linuxserver/wireguard:latest
+          ports:
+            - name: wireguard
+              containerPort: 51820
+              protocol: UDP
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Asia/Tehran"
+            - name: SERVERURL
+              value: "vpn.outi.ir"
+            - name: SERVERPORT
+              value: "51820"
+            - name: PEERS
+              value: "10"
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+                - SYS_MODULE
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: wireguard-mod
+              mountPath: /lib/modules
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+      volumes:
+        - name: config
+          emptyDir: {}
+        - name: wireguard-mod
+          hostPath:
+            path: /lib/modules
