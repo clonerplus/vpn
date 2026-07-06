@@ -46,9 +46,11 @@
     }
   ],
   "routing": {
+    "domainStrategy": "AsIs",
     "rules": [
       {
         "type": "field",
+        "inboundTag": ["vless-http"],
         "outboundTag": "direct"
       }
     ]
