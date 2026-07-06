@@ -22,15 +22,12 @@ spec:
           command: ["xray", "run", "-c", "/etc/xray/config.json"]
           ports:
             - name: vless
-              containerPort: 443
+              containerPort: 8080
               protocol: TCP
           volumeMounts:
             - name: config
               mountPath: /etc/xray/config.json
               subPath: config.json
-              readOnly: true
-            - name: tls
-              mountPath: /etc/xray/tls
               readOnly: true
           resources:
             requests:
@@ -48,6 +45,3 @@ spec:
         - name: config
           configMap:
             name: vless-http-config
-        - name: tls
-          secret:
-            secretName: vless-httpx-outi-tls
