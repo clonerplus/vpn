@@ -45,7 +45,7 @@ jobs:
               apps=("$selected")
             fi
           elif [[ '${{ github.event_name }}' == 'pull_request' ]]; then
-            apps=(vless-server vless-reality ss-server vpn-gateway vpn-api)
+            apps=(vless-server vless-reality vless-http ss-server vpn-gateway vpn-api)
           else
             base='${{ github.event.before }}'
             head='${{ github.sha }}'
