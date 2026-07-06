@@ -6,7 +6,7 @@
     {
       "tag": "vless-http",
       "listen": "0.0.0.0",
-      "port": 8080,
+      "port": 443,
       "protocol": "vless",
       "settings": {
         "clients": [
@@ -19,7 +19,17 @@
       },
       "streamSettings": {
         "network": "xhttp",
-        "security": "none",
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "vless-httpx.outi.ir",
+          "alpn": ["h2", "http/1.1"],
+          "certificates": [
+            {
+              "certificateFile": "/etc/xray/tls/tls.crt",
+              "keyFile": "/etc/xray/tls/tls.key"
+            }
+          ]
+        },
         "xhttpSettings": {
           "mode": "stream-one",
           "path": "/vless",
