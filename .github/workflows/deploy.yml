@@ -19,6 +19,9 @@ on:
           - vpn-gateway
           - vpn-api
 
+env:
+  KUBECONFIG: /home/runner/.kube/config
+
 jobs:
   stage-deploy:
     runs-on: ubuntu-latest
@@ -27,9 +30,10 @@ jobs:
 
       - name: Set up kubeconfig
         run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONF }}" | base64 -d > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
+          mkdir -p /home/runner/.kube
+          echo "${{ secrets.KUBE_CONF }}" | base64 -d > /home/runner/.kube/config
+          chmod 600 /home/runner/.kube/config
+          kubectl cluster-info
 
       - name: Create ghcr.io pull secret
         run: |
