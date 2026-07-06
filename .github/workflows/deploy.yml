@@ -49,10 +49,15 @@ jobs:
               apps=("$selected")
             fi
           else
-            base='${{ github.event.before }}'
-            head='${{ github.sha }}'
-            if [[ "$base" == '0000000000000000000000000000000000000000' ]]; then
-              base="$(git rev-list --max-parents=0 "$head" | tail -n 1)"
+            if [[ '${{ github.event_name }}' == 'pull_request' ]]; then
+              base='${{ github.event.pull_request.base.sha }}'
+              head='${{ github.event.pull_request.head.sha }}'
+            else
+              base='${{ github.event.before }}'
+              head='${{ github.sha }}'
+              if [[ "$base" == '0000000000000000000000000000000000000000' ]]; then
+                base="$(git rev-list --max-parents=0 "$head" | tail -n 1)"
+              fi
             fi
             while IFS= read -r file; do
               app="${file%%/*}"
