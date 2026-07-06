@@ -18,7 +18,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: xray
-          image: ghcr.io/xtls/xray-core:1.8.24
+          image: ghcr.io/xtls/xray-core:latest
           command: ["xray", "run", "-c", "/etc/xray/config.json"]
           ports:
             - name: vless
