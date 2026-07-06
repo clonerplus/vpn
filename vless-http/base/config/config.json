@@ -4,7 +4,7 @@
   },
   "inbounds": [
     {
-      "tag": "vless-grpc",
+      "tag": "vless-httpupgrade",
       "listen": "0.0.0.0",
       "port": 443,
       "protocol": "vless",
@@ -17,7 +17,7 @@
         "decryption": "none"
       },
       "streamSettings": {
-        "network": "grpc",
+        "network": "httpupgrade",
         "security": "tls",
         "tlsSettings": {
           "serverName": "vless-httpx.outi.ir",
@@ -30,8 +30,9 @@
             }
           ]
         },
-        "grpcSettings": {
-          "serviceName": "vless"
+        "httpupgradeSettings": {
+          "host": ["vless-httpx.outi.ir"],
+          "path": "/vless"
         }
       },
       "sniffing": {
@@ -50,7 +51,7 @@
     "rules": [
       {
         "type": "field",
-        "inboundTag": ["vless-grpc"],
+        "inboundTag": ["vless-httpupgrade"],
         "outboundTag": "direct"
       }
     ]
