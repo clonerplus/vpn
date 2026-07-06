@@ -14,6 +14,8 @@ spec:
       labels:
         app: vless-server
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: vless
           image: ghcr.io/outi-ops/vpn-server:latest
