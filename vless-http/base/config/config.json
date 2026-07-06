@@ -22,7 +22,7 @@
         "security": "tls",
         "tlsSettings": {
           "serverName": "vless-httpx.outi.ir",
-          "alpn": ["h2", "http/1.1"],
+          "alpn": [],
           "minVersion": "1.2",
           "certificates": [
             {
@@ -44,8 +44,7 @@
         }
       },
       "sniffing": {
-        "enabled": true,
-        "destOverride": ["http", "tls"]
+        "enabled": false
       }
     }
   ],
