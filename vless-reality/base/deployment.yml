@@ -5,7 +5,7 @@ metadata:
   labels:
     app: vless-reality
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: vless-reality

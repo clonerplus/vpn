@@ -9,6 +9,6 @@ resources:
 configMapGenerator:
   - name: ss-config
     files:
-      - config.json
+      - config/config.json
     options:
       disableNameSuffixHash: true

@@ -5,7 +5,7 @@ metadata:
   labels:
     app: vless-server
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: vless-server
@@ -14,6 +14,8 @@ spec:
       labels:
         app: vless-server
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: vless
           image: ghcr.io/outi-ops/vpn-server:latest

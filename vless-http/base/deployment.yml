@@ -1,36 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vpn-api
+  name: vless-http
   labels:
-    app: vpn-api
+    app: vless-http
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
-      app: vpn-api
+      app: vless-http
   template:
     metadata:
       labels:
-        app: vpn-api
+        app: vless-http
     spec:
       imagePullSecrets:
         - name: ghcr-secret
       containers:
-        - name: api
-          image: ghcr.io/outi-ops/vpn-api:latest
+        - name: xray
+          image: ghcr.io/xtls/xray-core:1.8.24
+          command: ["xray", "run", "-c", "/etc/xray/config.json"]
           ports:
-            - name: http
+            - name: vless
               containerPort: 8080
               protocol: TCP
-          env:
-            - name: VLESS_SERVER
-              value: "vless-httpx.outi.ir"
-            - name: VLESS_PORT
-              value: "443"
           volumeMounts:
             - name: config
-              mountPath: /etc/vpn-api
+              mountPath: /etc/xray/config.json
+              subPath: config.json
               readOnly: true
           resources:
             requests:
@@ -39,7 +36,12 @@ spec:
             limits:
               cpu: 200m
               memory: 128Mi
+          readinessProbe:
+            tcpSocket:
+              port: vless
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
         - name: config
           configMap:
-            name: vpn-api-config
+            name: vless-http-config

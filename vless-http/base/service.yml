@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vless-http
+  labels:
+    app: vless-http
+spec:
+  type: ClusterIP
+  ports:
+    - name: vless
+      port: 8080
+      targetPort: vless
+      protocol: TCP
+  selector:
+    app: vless-http

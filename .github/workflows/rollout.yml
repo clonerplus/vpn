@@ -11,6 +11,7 @@ on:
         options:
           - vless-server
           - vless-reality
+          - vless-http
           - ss-server
           - vpn-gateway
           - vpn-api
@@ -23,4 +24,4 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
         with:
-          args: kubectl rollout restart deployment/${{ inputs.app }} -n vless
+          args: rollout restart deployment/${{ inputs.app }} -n vpn

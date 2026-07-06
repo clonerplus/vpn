@@ -12,5 +12,4 @@ spec:
     - name: reality
       port: 443
       targetPort: reality
-      nodePort: 31443
       protocol: TCP
