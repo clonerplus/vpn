@@ -1,0 +1,11 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vpn-outi-crt
+spec:
+  secretName: vpn-outi-tls
+  dnsNames:
+    - "vpn.outi.ir"
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer

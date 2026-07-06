@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vless-http
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "TCP"
+spec:
+  tls:
+    - hosts:
+        - vpn.outi.ir
+      secretName: vpn-outi-tls
+  ingressClassName: nginx
+  rules:
+    - host: vpn.outi.ir
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: vless-http
+                port:
+                  number: 443

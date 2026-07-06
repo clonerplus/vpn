@@ -15,6 +15,7 @@ on:
           - all
           - vless-server
           - vless-reality
+          - vless-http
           - ss-server
           - vpn-gateway
           - vpn-api
@@ -39,7 +40,7 @@ jobs:
           if [[ '${{ github.event_name }}' == 'workflow_dispatch' ]]; then
             selected='${{ inputs.app }}'
             if [[ "$selected" == 'all' ]]; then
-              apps=(vless-server vless-reality ss-server vpn-gateway vpn-api)
+              apps=(vless-server vless-reality vless-http ss-server vpn-gateway vpn-api)
             else
               apps=("$selected")
             fi
@@ -54,7 +55,7 @@ jobs:
             while IFS= read -r file; do
               app="${file%%/*}"
               case "$app" in
-                vless-server|vless-reality|ss-server|vpn-gateway|vpn-api)
+                vless-server|vless-reality|vless-http|ss-server|vpn-gateway|vpn-api)
                   apps+=("$app")
                   ;;
               esac

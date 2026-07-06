@@ -11,6 +11,7 @@ on:
         options:
           - vless-server
           - vless-reality
+          - vless-http
           - ss-server
           - vpn-gateway
           - vpn-api

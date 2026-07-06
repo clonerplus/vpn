@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vless-http
+  labels:
+    app: vless-http
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vless-http
+  template:
+    metadata:
+      labels:
+        app: vless-http
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: xray
+          image: ghcr.io/xtls/xray-core:1.8.24
+          command: ["xray", "run", "-c", "/etc/xray/config.json"]
+          ports:
+            - name: vless
+              containerPort: 443
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /etc/xray/config.json
+              subPath: config.json
+              readOnly: true
+            - name: tls
+              mountPath: /etc/xray/tls
+              readOnly: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          readinessProbe:
+            tcpSocket:
+              port: vless
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: vless-http-config
+        - name: tls
+          secret:
+            secretName: vpn-outi-tls
