@@ -7,5 +7,5 @@ spec:
   dnsNames:
     - "vless-httpx.outi.ir"
   issuerRef:
-    name: letsencrypt
+    name: letsencrypt-prod
     kind: ClusterIssuer
