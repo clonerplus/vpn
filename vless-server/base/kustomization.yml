@@ -10,6 +10,6 @@ resources:
 configMapGenerator:
   - name: vless-config
     files:
-      - config.json
+      - config/config.json
     options:
       disableNameSuffixHash: true
