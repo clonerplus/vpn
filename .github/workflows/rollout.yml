@@ -19,10 +19,8 @@ jobs:
   rollout:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONF }}" | base64 -d > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
-      - name: Rollout restart
-        run: kubectl rollout restart deployment/${{ inputs.app }} -n vless
+      - uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
+        with:
+          args: rollout restart deployment/${{ inputs.app }} -n vless

@@ -19,49 +19,88 @@ on:
           - vpn-gateway
           - vpn-api
 
-env:
-  KUBECONFIG: /home/runner/.kube/config
-
 jobs:
-  stage-deploy:
+  detect-changes:
     runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.collect.outputs.apps }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Collect changed apps
+        id: collect
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          apps=()
+          if [[ '${{ github.event_name }}' == 'workflow_dispatch' ]]; then
+            selected='${{ inputs.app }}'
+            if [[ "$selected" == 'all' ]]; then
+              apps=(vless-server vless-reality ss-server vpn-gateway vpn-api)
+            else
+              apps=("$selected")
+            fi
+          elif [[ '${{ github.event_name }}' == 'pull_request' ]]; then
+            apps=(vless-server vless-reality ss-server vpn-gateway vpn-api)
+          else
+            base='${{ github.event.before }}'
+            head='${{ github.sha }}'
+            if [[ "$base" == '0000000000000000000000000000000000000000' ]]; then
+              base="$(git rev-list --max-parents=0 "$head" | tail -n 1)"
+            fi
+            while IFS= read -r file; do
+              app="${file%%/*}"
+              case "$app" in
+                vless-server|vless-reality|ss-server|vpn-gateway|vpn-api)
+                  apps+=("$app")
+                  ;;
+              esac
+            done < <(git diff --name-only "$base" "$head")
+          fi
+
+          if (( ${#apps[@]} == 0 )); then
+            echo 'apps=[]' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          mapfile -t unique_apps < <(printf '%s\n' "${apps[@]}" | sort -u)
+          json="$(printf '%s\n' "${unique_apps[@]}" | jq -R -s -c 'split("\n")[:-1]')"
+          echo "apps=$json" >> "$GITHUB_OUTPUT"
+
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create namespace and ghcr secret
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
+        with:
+          args: create namespace vless --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Create ghcr.io pull secret
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
+        with:
+          args: create secret docker-registry ghcr-secret --namespace=vless --docker-server=ghcr.io --docker-username=${{ github.actor }} --docker-password=${{ secrets.GITHUB_TOKEN }} --dry-run=client -o yaml | kubectl apply -f -
+
+  stage-deploy:
+    needs: [detect-changes, setup]
+    if: ${{ needs.detect-changes.outputs.apps != '[]' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON(needs.detect-changes.outputs.apps) }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up kubeconfig
-        run: |
-          mkdir -p /home/runner/.kube
-          echo "${{ secrets.KUBE_CONF }}" | base64 -d > /home/runner/.kube/config
-          chmod 600 /home/runner/.kube/config
-          kubectl cluster-info
-
-      - name: Create ghcr.io pull secret
-        run: |
-          kubectl create namespace vless --dry-run=client -o yaml | kubectl apply -f -
-          kubectl create secret docker-registry ghcr-secret \
-            --namespace=vless \
-            --docker-server=ghcr.io \
-            --docker-username=${{ github.actor }} \
-            --docker-password=${{ secrets.GITHUB_TOKEN }} \
-            --dry-run=client -o yaml | kubectl apply -f -
-
-      - name: Determine apps to deploy
-        id: apps
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            selected="${{ inputs.app }}"
-            if [[ "$selected" == "all" ]]; then
-              echo "list=vless-server vless-reality ss-server vpn-gateway vpn-api" >> $GITHUB_OUTPUT
-            else
-              echo "list=$selected" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "list=vless-server vless-reality ss-server vpn-gateway vpn-api" >> $GITHUB_OUTPUT
-          fi
-
       - name: Deploy to stage
-        run: |
-          for app in ${{ steps.apps.outputs.list }}; do
-            echo "Deploying $app..."
-            kubectl apply -k $app/overlays/stage
-          done
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
+        with:
+          args: apply -k ${{ matrix.app }}/overlays/stage

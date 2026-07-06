@@ -7,14 +7,20 @@ jobs:
   status:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONF }}" | base64 -d > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
-      - name: Get all resources
-        run: kubectl get all -n vless
-      - name: Get pods
-        run: kubectl get pods -n vless -o wide
-      - name: Get ingress
-        run: kubectl get ingress -n vless
+      - uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
+        with:
+          args: get all -n vless
+
+      - uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
+        with:
+          args: get pods -n vless -o wide
+
+      - uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
+        with:
+          args: get ingress -n vless
