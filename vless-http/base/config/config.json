@@ -4,7 +4,7 @@
   },
   "inbounds": [
     {
-      "tag": "vless-http",
+      "tag": "vless-grpc",
       "listen": "0.0.0.0",
       "port": 443,
       "protocol": "vless",
@@ -17,11 +17,11 @@
         "decryption": "none"
       },
       "streamSettings": {
-        "network": "tcp",
+        "network": "grpc",
         "security": "tls",
         "tlsSettings": {
           "serverName": "vless-httpx.outi.ir",
-          "alpn": [],
+          "alpn": ["h2"],
           "minVersion": "1.2",
           "certificates": [
             {
@@ -30,16 +30,8 @@
             }
           ]
         },
-        "tcpSettings": {
-          "header": {
-            "type": "http",
-            "request": {
-              "path": ["/vless"],
-              "headers": {
-                "User-Agent": ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36"]
-              }
-            }
-          }
+        "grpcSettings": {
+          "serviceName": "vless"
         }
       },
       "sniffing": {
@@ -58,7 +50,7 @@
     "rules": [
       {
         "type": "field",
-        "inboundTag": ["vless-http"],
+        "inboundTag": ["vless-grpc"],
         "outboundTag": "direct"
       }
     ]
