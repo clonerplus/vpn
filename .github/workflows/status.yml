@@ -11,16 +11,16 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
         with:
-          args: get all -n vless
+          args: kubectl get all -n vless
 
       - uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
         with:
-          args: get pods -n vless -o wide
+          args: kubectl get pods -n vless -o wide
 
       - uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
         with:
-          args: get ingress -n vless
+          args: kubectl get ingress -n vless
