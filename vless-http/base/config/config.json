@@ -18,7 +18,7 @@
         "decryption": "none"
       },
       "streamSettings": {
-        "network": "xhttp",
+        "network": "tcp",
         "security": "tls",
         "tlsSettings": {
           "serverName": "vless-httpx.outi.ir",
@@ -31,16 +31,15 @@
             }
           ]
         },
-        "xhttpSettings": {
-          "mode": "stream-one",
-          "path": "/vless",
-          "noGRPCHeader": true,
-          "xmux": {
-            "maxConcurrency": "6",
-            "hKeepAlivePeriod": 12
-          },
-          "headers": {
-            "User-Agent": "Mozilla/5.0(Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36"
+        "tcpSettings": {
+          "header": {
+            "type": "http",
+            "request": {
+              "path": ["/vless"],
+              "headers": {
+                "User-Agent": ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36"]
+              }
+            }
           }
         }
       },
