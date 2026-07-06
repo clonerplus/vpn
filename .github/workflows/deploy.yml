@@ -70,25 +70,8 @@ jobs:
           json="$(printf '%s\n' "${unique_apps[@]}" | jq -R -s -c 'split("\n")[:-1]')"
           echo "apps=$json" >> "$GITHUB_OUTPUT"
 
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create namespace and ghcr secret
-        uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
-        with:
-          args: create namespace vless --dry-run=client -o yaml | kubectl apply -f -
-
-      - name: Create ghcr.io pull secret
-        uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
-        with:
-          args: create secret docker-registry ghcr-secret --namespace=vless --docker-server=ghcr.io --docker-username=${{ github.actor }} --docker-password=${{ secrets.GITHUB_TOKEN }} --dry-run=client -o yaml | kubectl apply -f -
-
   stage-deploy:
-    needs: [detect-changes, setup]
+    needs: detect-changes
     if: ${{ needs.detect-changes.outputs.apps != '[]' }}
     runs-on: ubuntu-latest
     strategy:
