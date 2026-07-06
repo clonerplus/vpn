@@ -31,7 +31,7 @@
           ]
         },
         "httpupgradeSettings": {
-          "host": ["vless-httpx.outi.ir"],
+          "host": "vless-httpx.outi.ir",
           "path": "/vless"
         }
       },
