@@ -87,8 +87,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
-        with:
-          args: kubectl apply -k ${{ matrix.app }}/overlays/stage
+      - name: Set up kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONF }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+      - name: Deploy to stage
+        run: kubectl apply -k ${{ matrix.app }}/overlays/stage
