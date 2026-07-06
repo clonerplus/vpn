@@ -21,7 +21,7 @@
         "network": "xhttp",
         "security": "tls",
         "tlsSettings": {
-          "serverName": "vpn.outi.ir",
+          "serverName": "vless-httpx.outi.ir",
           "alpn": ["h2", "http/1.1"],
           "minVersion": "1.2",
           "cipherSuites": [

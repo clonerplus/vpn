@@ -50,4 +50,4 @@ spec:
             name: vless-http-config
         - name: tls
           secret:
-            secretName: vpn-outi-tls
+            secretName: vless-httpx-outi-tls

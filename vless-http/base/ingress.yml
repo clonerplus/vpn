@@ -8,11 +8,11 @@ metadata:
 spec:
   tls:
     - hosts:
-        - vpn.outi.ir
-      secretName: vpn-outi-tls
+        - vless-httpx.outi.ir
+      secretName: vless-httpx-outi-tls
   ingressClassName: nginx
   rules:
-    - host: vpn.outi.ir
+    - host: vless-httpx.outi.ir
       http:
         paths:
           - path: /

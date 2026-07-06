@@ -1,11 +1,11 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: vpn-outi-crt
+  name: vless-httpx-outi-crt
 spec:
-  secretName: vpn-outi-tls
+  secretName: vless-httpx-outi-tls
   dnsNames:
-    - "vpn.outi.ir"
+    - "vless-httpx.outi.ir"
   issuerRef:
     name: letsencrypt
     kind: ClusterIssuer
