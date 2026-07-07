@@ -20,7 +20,7 @@
         "network": "httpupgrade",
         "security": "tls",
         "tlsSettings": {
-          "serverName": "vless-httpx.outi.ir",
+          "serverName": "cdn.outi.ir",
           "alpn": ["h2"],
           "minVersion": "1.2",
           "certificates": [
@@ -31,7 +31,7 @@
           ]
         },
         "httpupgradeSettings": {
-          "host": "vless-httpx.outi.ir",
+          "host": "cdn.outi.ir",
           "path": "/vless"
         }
       },

@@ -25,7 +25,7 @@ spec:
               protocol: TCP
           env:
             - name: VLESS_SERVER
-              value: "vless-httpx.outi.ir"
+              value: "cdn.outi.ir"
             - name: VLESS_PORT
               value: "443"
           volumeMounts:

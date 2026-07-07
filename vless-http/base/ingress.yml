@@ -9,11 +9,11 @@ metadata:
 spec:
   tls:
     - hosts:
-        - vless-httpx.outi.ir
+        - cdn.outi.ir
       secretName: vless-httpx-outi-tls
   ingressClassName: nginx
   rules:
-    - host: vless-httpx.outi.ir
+    - host: cdn.outi.ir
       http:
         paths:
           - path: /vless
