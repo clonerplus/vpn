@@ -1,6 +1,6 @@
 {
   "log": {
-    "loglevel": "info"
+    "loglevel": "warning"
   },
   "inbounds": [
     {
@@ -43,9 +43,34 @@
   "outbounds": [
     {
       "protocol": "freedom",
-      "tag": "direct"
+      "tag": "direct",
+      "settings": {
+        "domainStrategy": "UseIP"
+      },
+      "streamSettings": {
+        "sockopt": {
+          "tcpFastOpen": true,
+          "tcpMptcp": true
+        }
+      }
     }
   ],
+  "policy": {
+    "levels": {
+      "0": {
+        "connIdle": 300,
+        "downlinkOnly": 1,
+        "handshake": 4,
+        "uplinkOnly": 1
+      }
+    },
+    "system": {
+      "statsInboundUplink": true,
+      "statsInboundDownlink": true,
+      "statsOutboundUplink": true,
+      "statsOutboundDownlink": true
+    }
+  },
   "routing": {
     "domainStrategy": "AsIs",
     "rules": [
