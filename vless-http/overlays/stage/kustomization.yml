@@ -4,3 +4,5 @@ kind: Kustomization
 namespace: vpn
 resources:
   - ../../base
+  - cronjob-rbac.yml
+  - cronjob.yml
