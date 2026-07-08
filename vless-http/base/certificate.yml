@@ -5,7 +5,7 @@ metadata:
 spec:
   secretName: vless-httpx-outi-tls
   dnsNames:
-    - "vless-httpx.outi.ir"
+    - "cdn.outi.ir"
   issuerRef:
-    name: letsencrypt-prod
+    name: letsencrypt
     kind: ClusterIssuer

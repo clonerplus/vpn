@@ -5,15 +5,15 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
 spec:
   tls:
     - hosts:
-        - vless-httpx.outi.ir
+        - cdn.outi.ir
       secretName: vless-httpx-outi-tls
   ingressClassName: nginx
   rules:
-    - host: vless-httpx.outi.ir
+    - host: cdn.outi.ir
       http:
         paths:
           - path: /vless

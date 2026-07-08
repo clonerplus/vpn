@@ -1,6 +1,9 @@
 name: Deploy VPN Services
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -45,7 +48,16 @@ jobs:
               apps=("$selected")
             fi
           elif [[ '${{ github.event_name }}' == 'pull_request' ]]; then
-            apps=(vless-server vless-reality ss-server vpn-gateway vpn-api)
+            base='${{ github.event.pull_request.base.sha }}'
+            head='${{ github.event.pull_request.head.sha }}'
+            while IFS= read -r file; do
+              app="${file%%/*}"
+              case "$app" in
+                vless-server|vless-reality|vless-http|ss-server|vpn-gateway|vpn-api)
+                  apps+=("$app")
+                  ;;
+              esac
+            done < <(git diff --name-only "$base" "$head")
           else
             base='${{ github.event.before }}'
             head='${{ github.sha }}'

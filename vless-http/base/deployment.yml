@@ -18,24 +18,27 @@ spec:
         - name: ghcr-secret
       containers:
         - name: xray
-          image: ghcr.io/xtls/xray-core:1.8.24
+          image: ghcr.io/xtls/xray-core:latest
           command: ["xray", "run", "-c", "/etc/xray/config.json"]
           ports:
             - name: vless
-              containerPort: 8080
+              containerPort: 443
               protocol: TCP
           volumeMounts:
             - name: config
               mountPath: /etc/xray/config.json
               subPath: config.json
               readOnly: true
+            - name: tls
+              mountPath: /etc/xray/tls
+              readOnly: true
           resources:
             requests:
-              cpu: 50m
-              memory: 64Mi
-            limits:
-              cpu: 200m
+              cpu: 100m
               memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
           readinessProbe:
             tcpSocket:
               port: vless
@@ -45,3 +48,6 @@ spec:
         - name: config
           configMap:
             name: vless-http-config
+        - name: tls
+          secret:
+            secretName: vless-httpx-outi-tls

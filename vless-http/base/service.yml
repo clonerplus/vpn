@@ -5,11 +5,12 @@ metadata:
   labels:
     app: vless-http
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
     - name: vless
-      port: 8080
+      port: 443
       targetPort: vless
+      nodePort: 30443
       protocol: TCP
   selector:
     app: vless-http

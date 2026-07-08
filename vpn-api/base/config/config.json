@@ -4,7 +4,7 @@
         "port": 8080
     },
     "vless": {
-        "server": "vless-httpx.outi.ir",
+        "server": "cdn.outi.ir",
         "port": 443
     },
     "database": {

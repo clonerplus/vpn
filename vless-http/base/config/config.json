@@ -1,54 +1,82 @@
 {
   "log": {
-    "loglevel": "info"
+    "loglevel": "warning"
   },
   "inbounds": [
     {
-      "tag": "vless-http",
+      "tag": "vless-httpupgrade",
       "listen": "0.0.0.0",
-      "port": 8080,
+      "port": 443,
       "protocol": "vless",
       "settings": {
         "clients": [
           {
-            "id": "b831381d-6324-4d53-ad4f-8cda48b30811",
-            "flow": "xtls-rprx-vision"
+            "id": "b831381d-6324-4d53-ad4f-8cda48b30811"
           }
         ],
         "decryption": "none"
       },
       "streamSettings": {
-        "network": "xhttp",
-        "security": "none",
-        "xhttpSettings": {
-          "mode": "stream-one",
-          "path": "/vless",
-          "noGRPCHeader": true,
-          "xmux": {
-            "maxConcurrency": "6",
-            "hKeepAlivePeriod": 12
-          },
-          "headers": {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36"
-          }
+        "network": "httpupgrade",
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "cdn.outi.ir",
+          "alpn": ["h2"],
+          "minVersion": "1.2",
+          "certificates": [
+            {
+              "certificateFile": "/etc/xray/tls/tls.crt",
+              "keyFile": "/etc/xray/tls/tls.key"
+            }
+          ]
+        },
+        "httpupgradeSettings": {
+          "host": "cdn.outi.ir",
+          "path": "/vless"
         }
       },
       "sniffing": {
-        "enabled": true,
-        "destOverride": ["http", "tls"]
+        "enabled": false
       }
     }
   ],
   "outbounds": [
     {
       "protocol": "freedom",
-      "tag": "direct"
+      "tag": "direct",
+      "settings": {
+        "domainStrategy": "UseIP"
+      },
+      "streamSettings": {
+        "sockopt": {
+          "tcpFastOpen": true,
+          "tcpMptcp": true
+        }
+      }
     }
   ],
+  "policy": {
+    "levels": {
+      "0": {
+        "connIdle": 300,
+        "downlinkOnly": 1,
+        "handshake": 4,
+        "uplinkOnly": 1
+      }
+    },
+    "system": {
+      "statsInboundUplink": true,
+      "statsInboundDownlink": true,
+      "statsOutboundUplink": true,
+      "statsOutboundDownlink": true
+    }
+  },
   "routing": {
+    "domainStrategy": "AsIs",
     "rules": [
       {
         "type": "field",
+        "inboundTag": ["vless-httpupgrade"],
         "outboundTag": "direct"
       }
     ]
