@@ -4,7 +4,7 @@
   },
   "inbounds": [
     {
-      "tag": "vless-httpupgrade",
+      "tag": "vless-httpupgrade-cdn",
       "listen": "0.0.0.0",
       "port": 443,
       "protocol": "vless",
@@ -31,7 +31,43 @@
           ]
         },
         "httpupgradeSettings": {
-          "host": ["cdn.outi.ir", "static.outi.ir"],
+          "host": "cdn.outi.ir",
+          "path": "/vless"
+        }
+      },
+      "sniffing": {
+        "enabled": false
+      }
+    },
+    {
+      "tag": "vless-httpupgrade-static",
+      "listen": "0.0.0.0",
+      "port": 8443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "b831381d-6324-4d53-ad4f-8cda48b30811"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "httpupgrade",
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "static.outi.ir",
+          "alpn": ["h2"],
+          "minVersion": "1.2",
+          "certificates": [
+            {
+              "certificateFile": "/etc/xray/tls/tls.crt",
+              "keyFile": "/etc/xray/tls/tls.key"
+            }
+          ]
+        },
+        "httpupgradeSettings": {
+          "host": "static.outi.ir",
           "path": "/vless"
         }
       },
@@ -70,7 +106,7 @@
     "rules": [
       {
         "type": "field",
-        "inboundTag": ["vless-httpupgrade"],
+        "inboundTag": ["vless-httpupgrade-cdn", "vless-httpupgrade-static"],
         "outboundTag": "direct"
       }
     ]

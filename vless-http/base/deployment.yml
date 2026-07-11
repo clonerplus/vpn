@@ -21,8 +21,11 @@ spec:
           image: ghcr.io/xtls/xray-core:latest
           command: ["xray", "run", "-c", "/etc/xray/config.json"]
           ports:
-            - name: vless
+            - name: vless-cdn
               containerPort: 443
+              protocol: TCP
+            - name: vless-static
+              containerPort: 8443
               protocol: TCP
           volumeMounts:
             - name: config
