@@ -58,17 +58,11 @@
   "policy": {
     "levels": {
       "0": {
-        "connIdle": 300,
+        "connIdle": 60,
         "downlinkOnly": 1,
         "handshake": 4,
         "uplinkOnly": 1
       }
-    },
-    "system": {
-      "statsInboundUplink": true,
-      "statsInboundDownlink": true,
-      "statsOutboundUplink": true,
-      "statsOutboundDownlink": true
     }
   },
   "routing": {
