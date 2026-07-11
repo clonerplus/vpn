@@ -44,7 +44,7 @@ spec:
               memory: 512Mi
           readinessProbe:
             tcpSocket:
-              port: vless
+              port: vless-cdn
             initialDelaySeconds: 5
             periodSeconds: 10
       volumes:
