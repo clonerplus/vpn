@@ -6,6 +6,7 @@ spec:
   secretName: vless-httpx-outi-tls
   dnsNames:
     - "cdn.outi.ir"
+    - "static.outi.ir"
   issuerRef:
     name: letsencrypt
     kind: ClusterIssuer

@@ -31,7 +31,7 @@
           ]
         },
         "httpupgradeSettings": {
-          "host": "cdn.outi.ir",
+          "host": ["cdn.outi.ir", "static.outi.ir"],
           "path": "/vless"
         }
       },
