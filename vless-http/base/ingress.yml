@@ -24,3 +24,10 @@ spec:
                 name: vless-http
                 port:
                   number: 443
+          - path: /sub
+            pathType: Prefix
+            backend:
+              service:
+                name: vless-subscription
+                port:
+                  number: 80
