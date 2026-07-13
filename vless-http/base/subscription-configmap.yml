@@ -7,18 +7,18 @@ data:
     server {
         listen 80;
 
-        location = /sub {
+        location /sub {
             auth_basic "Subscription";
             auth_basic_user_file /etc/nginx/auth/htpasswd;
             root /usr/share/nginx/html;
         }
 
         location / {
-            root /usr/share/nginx/html;
+            return 404;
         }
     }
   htpasswd: |
-    hasan:$2y$10$Kd7oQqMaiWw5GfNyktiEc.cqwbBk0UkzykNS1mxYEwhlDbPNpSvxa
+    hasan:$apr1$RnjFBXa2$igtCAucczYJ6MD/zhVy3g.
   sub: |
     vless://b831381d-6324-4d53-ad4f-8cda48b30811@cdn.outi.ir:443?security=tls&encryption=none&type=httpupgrade&alpn=h2&host=cdn.outi.ir&path=%2Fvless&sni=cdn.outi.ir#Outi%20CDN
     vless://b831381d-6324-4d53-ad4f-8cda48b30811@static.outi.ir:30843?security=tls&encryption=none&type=httpupgrade&alpn=h2,http/1.1&host=static.outi.ir&path=%2Fvless&sni=static.outi.ir#Outi%20Direct
