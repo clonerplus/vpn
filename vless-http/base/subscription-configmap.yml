@@ -7,14 +7,18 @@ data:
     server {
         listen 80;
 
-        location /sub {
+        location = /sub {
             auth_basic "Subscription";
             auth_basic_user_file /etc/nginx/auth/htpasswd;
-            root /usr/share/nginx/html;
+            default_type text/plain;
+            alias /usr/share/nginx/html/sub;
         }
 
         location / {
-            return 404;
+            auth_basic "Subscription";
+            auth_basic_user_file /etc/nginx/auth/htpasswd;
+            root /usr/share/nginx/html;
+            index index.html;
         }
     }
   htpasswd: |
@@ -22,3 +26,172 @@ data:
   sub: |
     vless://b831381d-6324-4d53-ad4f-8cda48b30811@cdn.outi.ir:443?security=tls&encryption=none&type=httpupgrade&alpn=h2&host=cdn.outi.ir&path=%2Fvless&sni=cdn.outi.ir#Outi%20CDN
     vless://b831381d-6324-4d53-ad4f-8cda48b30811@static.outi.ir:30843?security=tls&encryption=none&type=httpupgrade&alpn=h2,http/1.1&host=static.outi.ir&path=%2Fvless&sni=static.outi.ir#Outi%20Direct
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Outi VPN</title>
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          background: #0f1117;
+          color: #e4e4e7;
+          min-height: 100vh;
+          padding: 2rem 1rem;
+        }
+        .container { max-width: 640px; margin: 0 auto; }
+        h1 {
+          text-align: center;
+          font-size: 1.8rem;
+          margin-bottom: 0.5rem;
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+          text-align: center;
+          color: #71717a;
+          margin-bottom: 2rem;
+          font-size: 0.9rem;
+        }
+        .card {
+          background: #1c1c22;
+          border: 1px solid #27272a;
+          border-radius: 12px;
+          padding: 1.25rem;
+          margin-bottom: 1rem;
+          transition: border-color 0.2s;
+        }
+        .card:hover { border-color: #6366f1; }
+        .card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.75rem;
+        }
+        .card-name {
+          font-weight: 600;
+          font-size: 1rem;
+          color: #a1a1aa;
+        }
+        .badge {
+          font-size: 0.7rem;
+          padding: 0.2rem 0.5rem;
+          border-radius: 999px;
+          font-weight: 500;
+        }
+        .badge-tls {
+          background: rgba(34,197,94,0.15);
+          color: #22c55e;
+        }
+        .card-details {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.4rem;
+          font-size: 0.82rem;
+          color: #71717a;
+        }
+        .card-details span { word-break: break-all; }
+        .label { color: #52525b; }
+        .sub-section {
+          background: #1c1c22;
+          border: 1px solid #27272a;
+          border-radius: 12px;
+          padding: 1.25rem;
+          margin-top: 1.5rem;
+        }
+        .sub-section h2 {
+          font-size: 1rem;
+          color: #a1a1aa;
+          margin-bottom: 0.75rem;
+        }
+        .sub-url {
+          background: #0f1117;
+          border: 1px solid #27272a;
+          border-radius: 8px;
+          padding: 0.75rem;
+          font-family: 'SF Mono', 'Fira Code', monospace;
+          font-size: 0.78rem;
+          color: #a78bfa;
+          word-break: break-all;
+          user-select: all;
+          cursor: pointer;
+        }
+        .sub-url:hover { border-color: #6366f1; }
+        .copy-btn {
+          display: block;
+          width: 100%;
+          margin-top: 0.75rem;
+          padding: 0.65rem;
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 0.85rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: opacity 0.2s;
+        }
+        .copy-btn:hover { opacity: 0.9; }
+        .footer {
+          text-align: center;
+          margin-top: 2rem;
+          font-size: 0.75rem;
+          color: #3f3f46;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>Outi VPN</h1>
+        <p class="subtitle">VLESS Configurations</p>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-name">Outi CDN</span>
+            <span class="badge badge-tls">TLS</span>
+          </div>
+          <div class="card-details">
+            <span><span class="label">Server:</span> cdn.outi.ir</span>
+            <span><span class="label">Port:</span> 443</span>
+            <span><span class="label">Protocol:</span> httpupgrade</span>
+            <span><span class="label">ALPN:</span> h2</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-name">Outi Direct</span>
+            <span class="badge badge-tls">TLS</span>
+          </div>
+          <div class="card-details">
+            <span><span class="label">Server:</span> static.outi.ir</span>
+            <span><span class="label">Port:</span> 30843</span>
+            <span><span class="label">Protocol:</span> httpupgrade</span>
+            <span><span class="label">ALPN:</span> h2, http/1.1</span>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h2>Subscription URL</h2>
+          <div class="sub-url" id="subUrl"></div>
+          <button class="copy-btn" onclick="copySub()">Copy Subscription URL</button>
+        </div>
+
+        <p class="footer">Credentials are required for subscription access.</p>
+      </div>
+      <script>
+        document.getElementById('subUrl').textContent = location.origin + '/sub';
+        function copySub() {
+          navigator.clipboard.writeText(location.origin + '/sub').then(() => {
+            const btn = document.querySelector('.copy-btn');
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy Subscription URL', 2000);
+          });
+        }
+      </script>
+    </body>
+    </html>
