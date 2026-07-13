@@ -17,7 +17,7 @@ data:
         }
     }
   htpasswd: |
-    :$2y$05$2KZWmw0R27PkBXJa1vfjkulusvu/M.4NoVR2NIOt80eac/oX3Vdiq
+    hasan:$2y$10$Kd7oQqMaiWw5GfNyktiEc.cqwbBk0UkzykNS1mxYEwhlDbPNpSvxa
   sub: |
     vless://b831381d-6324-4d53-ad4f-8cda48b30811@cdn.outi.ir:443?security=tls&encryption=none&type=httpupgrade&alpn=h2&host=cdn.outi.ir&path=%2Fvless&sni=cdn.outi.ir#Outi%20CDN
     vless://b831381d-6324-4d53-ad4f-8cda48b30811@static.outi.ir:30843?security=tls&encryption=none&type=httpupgrade&alpn=h2,http/1.1&host=static.outi.ir&path=%2Fvless&sni=static.outi.ir#Outi%20Direct
