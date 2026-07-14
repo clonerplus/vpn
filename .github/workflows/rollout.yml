@@ -2,19 +2,6 @@ name: Rollout Restart
 
 on:
   workflow_dispatch:
-    inputs:
-      app:
-        description: 'Application to restart'
-        required: true
-        default: 'vless-server'
-        type: choice
-        options:
-          - vless-server
-          - vless-reality
-          - vless-http
-          - ss-server
-          - vpn-gateway
-          - vpn-api
 
 jobs:
   rollout:
@@ -24,4 +11,4 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
         with:
-          args: rollout restart deployment/${{ inputs.app }} -n vpn
+          args: rollout restart deployment/vless-http -n vpn

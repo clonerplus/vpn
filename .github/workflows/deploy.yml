@@ -1,96 +1,16 @@
-name: Deploy VPN Services
+name: Deploy VLESS HTTP
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+    paths:
+      - 'vless-http/**'
   workflow_dispatch:
-    inputs:
-      app:
-        description: "Which app to deploy"
-        required: true
-        default: "all"
-        type: choice
-        options:
-          - all
-          - vless-server
-          - vless-reality
-          - vless-http
-          - ss-server
-          - vpn-gateway
-          - vpn-api
 
 jobs:
-  detect-changes:
+  deploy:
     runs-on: ubuntu-latest
-    outputs:
-      apps: ${{ steps.collect.outputs.apps }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Collect changed apps
-        id: collect
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          apps=()
-          if [[ '${{ github.event_name }}' == 'workflow_dispatch' ]]; then
-            selected='${{ inputs.app }}'
-            if [[ "$selected" == 'all' ]]; then
-              apps=(vless-server vless-reality vless-http ss-server vpn-gateway vpn-api)
-            else
-              apps=("$selected")
-            fi
-          elif [[ '${{ github.event_name }}' == 'pull_request' ]]; then
-            base='${{ github.event.pull_request.base.sha }}'
-            head='${{ github.event.pull_request.head.sha }}'
-            while IFS= read -r file; do
-              app="${file%%/*}"
-              case "$app" in
-                vless-server|vless-reality|vless-http|ss-server|vpn-gateway|vpn-api)
-                  apps+=("$app")
-                  ;;
-              esac
-            done < <(git diff --name-only "$base" "$head")
-          else
-            base='${{ github.event.before }}'
-            head='${{ github.sha }}'
-            if [[ "$base" == '0000000000000000000000000000000000000000' ]]; then
-              base="$(git rev-list --max-parents=0 "$head" | tail -n 1)"
-            fi
-            while IFS= read -r file; do
-              app="${file%%/*}"
-              case "$app" in
-                vless-server|vless-reality|vless-http|ss-server|vpn-gateway|vpn-api)
-                  apps+=("$app")
-                  ;;
-              esac
-            done < <(git diff --name-only "$base" "$head")
-          fi
-
-          if (( ${#apps[@]} == 0 )); then
-            echo 'apps=[]' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          mapfile -t unique_apps < <(printf '%s\n' "${apps[@]}" | sort -u)
-          json="$(printf '%s\n' "${unique_apps[@]}" | jq -R -s -c 'split("\n")[:-1]')"
-          echo "apps=$json" >> "$GITHUB_OUTPUT"
-
-  stage-deploy:
-    needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.apps != '[]' }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        app: ${{ fromJSON(needs.detect-changes.outputs.apps) }}
     steps:
       - uses: actions/checkout@v4
 
@@ -99,4 +19,4 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONF }}
         with:
-          args: apply -k ${{ matrix.app }}/overlays/stage
+          args: apply -k vless-http/overlays/stage
