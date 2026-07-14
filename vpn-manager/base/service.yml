@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vpn-manager
+  labels:
+    app: vpn-manager
+spec:
+  type: ClusterIP
+  selector:
+    app: vpn-manager
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+      protocol: TCP
