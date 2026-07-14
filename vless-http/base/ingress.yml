@@ -24,3 +24,28 @@ spec:
                 name: vless-http
                 port:
                   number: 443
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vless-subscription
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  tls:
+    - hosts:
+        - cdn.outi.ir
+      secretName: vless-httpx-outi-tls
+  ingressClassName: nginx
+  rules:
+    - host: cdn.outi.ir
+      http:
+        paths:
+          - path: /sub
+            pathType: Prefix
+            backend:
+              service:
+                name: vless-subscription
+                port:
+                  number: 80

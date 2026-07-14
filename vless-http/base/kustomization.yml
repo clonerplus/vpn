@@ -6,6 +6,9 @@ resources:
   - service.yml
   - certificate.yml
   - ingress.yml
+  - subscription-deployment.yml
+  - subscription-service.yml
+  - subscription-configmap.yml
 
 configMapGenerator:
   - name: vless-http-config
