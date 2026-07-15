@@ -21,11 +21,21 @@ spec:
             - /bin/sh
             - -c
             - |
-              apk add --no-cache wget ar tar
+              apk add --no-cache python3 wget
               wget -q https://github.com/enfein/mieru/releases/download/v3.34.1/mita_3.34.1_amd64.deb -O /tmp/mita.deb
-              cd /tmp && ar x mita.deb && tar xf data.tar.*
-              cp /tmp/usr/bin/mita /shared/mita
-              chmod +x /shared/mita
+              python3 -c "
+              import arfile, tarfile, io, os
+              deb = arfile.open('/tmp/mita.deb')
+              for name in deb.getnames():
+                  if name.startswith('data.tar'):
+                      data = tarfile.open(fileobj=io.BytesIO(deb.extractfile(name).read()))
+                      for m in data.getmembers():
+                          if m.name.endswith('/mita'):
+                              f = data.extractfile(m)
+                              open('/shared/mita', 'wb').write(f.read())
+                              os.chmod('/shared/mita', 0o755)
+                              break
+              "
           volumeMounts:
             - name: mita-bin
               mountPath: /shared
