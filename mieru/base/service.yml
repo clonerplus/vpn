@@ -10,7 +10,7 @@ spec:
     - name: mieru-tcp
       port: 443
       targetPort: 443
-      nodePort: 30999
+      nodePort: 30444
       protocol: TCP
   selector:
     app: mieru
