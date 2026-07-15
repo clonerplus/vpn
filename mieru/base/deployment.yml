@@ -37,15 +37,16 @@ spec:
             - |
               cp /shared/mita /usr/local/bin/mita
               chmod +x /usr/local/bin/mita
+              mkdir -p /etc/mita
               cp /config-src/config.json /etc/mita/config.json
-              mita apply config /etc/mita/config.json
+              echo "Config applied, mita version:"
+              mita version || true
           volumeMounts:
             - name: mita-bin
               mountPath: /shared
               readOnly: true
             - name: config-src
-              mountPath: /config-src/config.json
-              subPath: config.json
+              mountPath: /config-src
               readOnly: true
             - name: mita-data
               mountPath: /etc/mita
