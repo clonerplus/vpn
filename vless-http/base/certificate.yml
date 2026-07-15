@@ -7,6 +7,7 @@ spec:
   dnsNames:
     - "cdn.outi.ir"
     - "static.outi.ir"
+    - "mieru.outi.ir"
   issuerRef:
     name: letsencrypt
     kind: ClusterIssuer

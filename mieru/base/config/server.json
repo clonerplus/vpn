@@ -12,5 +12,8 @@
         }
     ],
     "loggingLevel": "INFO",
-    "mtu": 1400
+    "mtu": 1400,
+    "multiplexing": {
+        "level": "MULTIPLEXING_LOW"
+    }
 }
