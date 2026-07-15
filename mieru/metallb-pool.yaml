@@ -1,0 +1,17 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: mieru-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 37.59.154.7/32
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: mieru-l2
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - mieru-pool
