@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vpn-manager
+  labels:
+    app: vpn-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vpn-manager
+  template:
+    metadata:
+      labels:
+        app: vpn-manager
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: api
+          image: ghcr.io/outi-ops/vpn-manager:latest
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /etc/vpn-manager
+              readOnly: true
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+      volumes:
+        - name: config
+          configMap:
+            name: vpn-manager-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: vpn-manager-data
