@@ -8,6 +8,6 @@ resources:
 configMapGenerator:
   - name: mieru-config
     files:
-      - config/server.json
+      - config.json=config/server.json
     options:
       disableNameSuffixHash: true
