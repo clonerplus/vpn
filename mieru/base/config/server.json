@@ -1,0 +1,16 @@
+{
+    "portBindings": [
+        {
+            "port": 443,
+            "protocol": "TCP"
+        }
+    ],
+    "users": [
+        {
+            "name": "user1",
+            "password": "CHANGE_ME"
+        }
+    ],
+    "loggingLevel": "INFO",
+    "mtu": 1400
+}
