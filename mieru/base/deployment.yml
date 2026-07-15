@@ -63,7 +63,8 @@ spec:
               mkdir -p /var/run/mita /var/lib/mita
               chown -R mita:mita /var/run/mita /var/lib/mita /etc/mita
               mita run &
-              sleep 3
+              until [ -S /var/run/mita/mita.sock ]; do sleep 1; done
+              mita apply config /etc/mita/config.json
               mita start
               wait
           ports:
