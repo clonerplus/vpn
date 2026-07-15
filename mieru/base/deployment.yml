@@ -16,26 +16,16 @@ spec:
     spec:
       initContainers:
         - name: download-mita
-          image: alpine:3.20
+          image: debian:bookworm-slim
           command:
             - /bin/sh
             - -c
             - |
-              apk add --no-cache python3 wget
+              apt-get update && apt-get install -y --no-install-recommends wget ca-certificates
               wget -q https://github.com/enfein/mieru/releases/download/v3.34.1/mita_3.34.1_amd64.deb -O /tmp/mita.deb
-              python3 -c "
-              import arfile, tarfile, io, os
-              deb = arfile.open('/tmp/mita.deb')
-              for name in deb.getnames():
-                  if name.startswith('data.tar'):
-                      data = tarfile.open(fileobj=io.BytesIO(deb.extractfile(name).read()))
-                      for m in data.getmembers():
-                          if m.name.endswith('/mita'):
-                              f = data.extractfile(m)
-                              open('/shared/mita', 'wb').write(f.read())
-                              os.chmod('/shared/mita', 0o755)
-                              break
-              "
+              dpkg-deb -x /tmp/mita.deb /tmp/mita-pkg
+              cp /tmp/mita-pkg/usr/bin/mita /shared/mita
+              chmod +x /shared/mita
           volumeMounts:
             - name: mita-bin
               mountPath: /shared
