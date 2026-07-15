@@ -5,11 +5,12 @@ metadata:
   labels:
     app: mieru
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
     - name: mieru-tcp
       port: 443
       targetPort: 443
+      nodePort: 30444
       protocol: TCP
   selector:
     app: mieru

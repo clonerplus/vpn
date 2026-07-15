@@ -48,7 +48,7 @@ data:
                         "domainName": "mieru.outi.ir",
                         "portBindings": [
                             {
-                                "port": 443,
+                                "port": 30444,
                                 "protocol": "TCP"
                             }
                         ]
