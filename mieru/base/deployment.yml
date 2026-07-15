@@ -62,7 +62,10 @@ spec:
               adduser -D -H -g "" mita || true
               mkdir -p /var/run/mita /var/lib/mita
               chown -R mita:mita /var/run/mita /var/lib/mita /etc/mita
-              mita run
+              mita run &
+              sleep 3
+              mita start
+              wait
           ports:
             - name: mieru-tcp
               containerPort: 443
