@@ -14,28 +14,51 @@ spec:
       labels:
         app: mieru
     spec:
-      imagePullSecrets:
-        - name: ghcr-secret
       initContainers:
-        - name: apply-config
-          image: ghcr.io/clonerplus/vpn/mita:latest
+        - name: download-mita
+          image: alpine:3.20
           command:
             - /bin/sh
             - -c
-            - cp /tmp/config.json /etc/mita/config.json && mita apply config /etc/mita/config.json
+            - |
+              apk add --no-cache wget ar tar
+              wget -q https://github.com/enfein/mieru/releases/download/v3.34.1/mita_3.34.1_amd64.deb -O /tmp/mita.deb
+              cd /tmp && ar x mita.deb && tar xf data.tar.*
+              cp /tmp/usr/bin/mita /shared/mita
+              chmod +x /shared/mita
           volumeMounts:
+            - name: mita-bin
+              mountPath: /shared
+        - name: apply-config
+          image: alpine:3.20
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cp /shared/mita /usr/local/bin/mita
+              chmod +x /usr/local/bin/mita
+              cp /config-src/config.json /etc/mita/config.json
+              mita apply config /etc/mita/config.json
+          volumeMounts:
+            - name: mita-bin
+              mountPath: /shared
+              readOnly: true
             - name: config-src
-              mountPath: /tmp/config.json
+              mountPath: /config-src/config.json
               subPath: config.json
               readOnly: true
             - name: mita-data
               mountPath: /etc/mita
-          securityContext:
-            runAsUser: 0
       containers:
         - name: mita
-          image: ghcr.io/clonerplus/vpn/mita:latest
-          command: ["/usr/local/bin/mita", "run"]
+          image: alpine:3.20
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cp /shared/mita /usr/local/bin/mita
+              chmod +x /usr/local/bin/mita
+              mita run
           ports:
             - name: mieru-tcp
               containerPort: 443
@@ -46,7 +69,7 @@ spec:
                 - /bin/sh
                 - -c
                 - mita status | grep -q RUNNING
-            initialDelaySeconds: 10
+            initialDelaySeconds: 15
             periodSeconds: 15
           livenessProbe:
             exec:
@@ -54,7 +77,7 @@ spec:
                 - /bin/sh
                 - -c
                 - mita status | grep -q RUNNING
-            initialDelaySeconds: 15
+            initialDelaySeconds: 20
             periodSeconds: 30
           resources:
             requests:
@@ -64,11 +87,16 @@ spec:
               cpu: 500m
               memory: 256Mi
           volumeMounts:
+            - name: mita-bin
+              mountPath: /shared
+              readOnly: true
             - name: mita-data
               mountPath: /etc/mita
             - name: mita-run
               mountPath: /var/run/mita
       volumes:
+        - name: mita-bin
+          emptyDir: {}
         - name: config-src
           configMap:
             name: mieru-config
