@@ -6,7 +6,7 @@
     {
       "tag": "vless-reality",
       "listen": "0.0.0.0",
-      "port": 443,
+      "port": 8443,
       "protocol": "vless",
       "settings": {
         "clients": [
@@ -25,7 +25,7 @@
           "dest": "www.google.com:443",
           "xver": 0,
           "serverNames": [
-            "api.outi.ir"
+            "static.outi.ir"
           ],
           "privateKey": "xmnrPmH0eloVBm1hcdTaxsO09fTWhZGPCkUEVntNEvo",
           "shortIds": [

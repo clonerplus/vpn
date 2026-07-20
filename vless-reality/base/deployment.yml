@@ -14,19 +14,16 @@ spec:
       labels:
         app: vless-reality
     spec:
-      hostNetwork: true
-      dnsPolicy: ClusterFirstWithHostNet
       imagePullSecrets:
         - name: ghcr-secret
       containers:
         - name: xray
           image: ghcr.io/xtls/xray-core:latest
           command: ["xray", "run", "-c", "/etc/xray/config.json"]
-          securityContext:
-            runAsUser: 0
-            capabilities:
-              add:
-                - NET_BIND_SERVICE
+          ports:
+            - name: vless-reality
+              containerPort: 8443
+              protocol: TCP
           volumeMounts:
             - name: config
               mountPath: /etc/xray/config.json
@@ -39,13 +36,6 @@ spec:
             limits:
               cpu: "1"
               memory: 512Mi
-          startupProbe:
-            exec:
-              command:
-                - pgrep
-                - xray
-            initialDelaySeconds: 5
-            periodSeconds: 5
       volumes:
         - name: config
           configMap:

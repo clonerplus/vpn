@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vless-reality
+  labels:
+    app: vless-reality
+spec:
+  type: NodePort
+  ports:
+    - name: vless-reality
+      port: 8443
+      targetPort: 8443
+      nodePort: 30844
+      protocol: TCP
+  selector:
+    app: vless-reality
