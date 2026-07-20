@@ -10,7 +10,7 @@ spec:
     - name: vless-reality
       port: 443
       targetPort: 443
-      protocol: TCP
+      nodePort: 30844
       protocol: TCP
   selector:
     app: vless-reality
