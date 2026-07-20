@@ -22,15 +22,17 @@
         "security": "reality",
         "realitySettings": {
           "show": false,
-          "dest": "www.google.com:443",
+          "dest": "www.microsoft.com:443",
           "xver": 0,
           "serverNames": [
-            "static.outi.ir"
+            "static.outi.ir",
+            "www.microsoft.com"
           ],
           "privateKey": "xmnrPmH0eloVBm1hcdTaxsO09fTWhZGPCkUEVntNEvo",
           "shortIds": [
             "",
-            "02416cb7"
+            "02416cb7",
+            "6ba85179e30d4fc2"
           ]
         }
       },
