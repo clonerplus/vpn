@@ -5,12 +5,11 @@ metadata:
   labels:
     app: vless-reality
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - name: vless-reality
-      port: 8443
-      targetPort: 8443
-      nodePort: 30844
+      port: 443
+      targetPort: 443
       protocol: TCP
   selector:
     app: vless-reality
