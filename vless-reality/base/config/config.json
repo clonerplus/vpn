@@ -17,7 +17,7 @@
         "decryption": "none"
       },
       "streamSettings": {
-        "network": "httpupgrade",
+        "network": "tcp",
         "security": "reality",
         "realitySettings": {
           "show": false,
@@ -31,10 +31,6 @@
             "",
             "02416cb7"
           ]
-        },
-        "httpupgradeSettings": {
-          "host": "static.outi.ir",
-          "path": "/vless"
         }
       },
       "sniffing": {
