@@ -33,6 +33,7 @@ data:
   sub: |
     vless://b831381d-6324-4d53-ad4f-8cda48b30811@cdn.outi.ir:443?security=tls&encryption=none&type=httpupgrade&alpn=h2&host=cdn.outi.ir&path=%2Fvless&sni=cdn.outi.ir#Outi%20CDN
     vless://b831381d-6324-4d53-ad4f-8cda48b30811@static.outi.ir:30843?security=tls&encryption=none&type=httpupgrade&alpn=h2,http/1.1&host=static.outi.ir&path=%2Fvless&sni=static.outi.ir#Outi%20Direct
+    vless://b831381d-6324-4d53-ad4f-8cda48b30811@static.outi.ir:30844?security=reality&encryption=none&pbk=pFb0wN_WuDmZ5dT7Nf8ys9fGikrsL8G6E6xjk5OgFCA&fp=chrome&sni=static.outi.ir&spx=%2F&sid=02416cb7&type=tcp#Outi%20Reality
   mieru-config.json: |
     {
         "profiles": [
@@ -134,6 +135,10 @@ data:
           background: rgba(251,146,60,0.15);
           color: #fb923c;
         }
+        .badge-reality {
+          background: rgba(236,72,153,0.15);
+          color: #ec4899;
+        }
         .card-details {
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -232,6 +237,19 @@ data:
             <span><span class="label">Port:</span> 443</span>
             <span><span class="label">Protocol:</span> Mieru (TCP)</span>
             <span><span class="label">Encryption:</span> XChaCha20-Poly1305</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-name">Outi Reality</span>
+            <span class="badge badge-reality">Reality</span>
+          </div>
+          <div class="card-details">
+            <span><span class="label">Server:</span> static.outi.ir</span>
+            <span><span class="label">Port:</span> 30844</span>
+            <span><span class="label">Protocol:</span> VLESS (TCP)</span>
+            <span><span class="label">Security:</span> REALITY</span>
           </div>
         </div>
 
