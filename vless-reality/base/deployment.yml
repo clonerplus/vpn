@@ -22,10 +22,6 @@ spec:
         - name: xray
           image: ghcr.io/xtls/xray-core:latest
           command: ["xray", "run", "-c", "/etc/xray/config.json"]
-          ports:
-            - name: vless-reality
-              containerPort: 443
-              protocol: TCP
           volumeMounts:
             - name: config
               mountPath: /etc/xray/config.json
@@ -39,9 +35,12 @@ spec:
               cpu: "1"
               memory: 512Mi
           readinessProbe:
-            tcpSocket:
-              port: 443
-            initialDelaySeconds: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - "ss -tlnp | grep :443"
+            initialDelaySeconds: 10
             periodSeconds: 10
       volumes:
         - name: config
