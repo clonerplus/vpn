@@ -8,8 +8,8 @@ spec:
   type: NodePort
   ports:
     - name: vless-reality
-      port: 8443
-      targetPort: 8443
+      port: 443
+      targetPort: 443
       nodePort: 30844
       protocol: TCP
   selector:
