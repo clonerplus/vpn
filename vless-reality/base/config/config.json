@@ -4,7 +4,7 @@
   },
   "inbounds": [
     {
-      "tag": "vless-reality-static",
+      "tag": "vless-reality",
       "listen": "0.0.0.0",
       "port": 443,
       "protocol": "vless",
@@ -73,7 +73,7 @@
     "rules": [
       {
         "type": "field",
-        "inboundTag": ["vless-reality-static"],
+        "inboundTag": ["vless-reality"],
         "outboundTag": "direct"
       }
     ]
