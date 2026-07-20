@@ -33,7 +33,7 @@ data:
   sub: |
     vless://b831381d-6324-4d53-ad4f-8cda48b30811@cdn.outi.ir:443?security=tls&encryption=none&type=httpupgrade&alpn=h2&host=cdn.outi.ir&path=%2Fvless&sni=cdn.outi.ir#Outi%20CDN
     vless://b831381d-6324-4d53-ad4f-8cda48b30811@static.outi.ir:30843?security=tls&encryption=none&type=httpupgrade&alpn=h2,http/1.1&host=static.outi.ir&path=%2Fvless&sni=static.outi.ir#Outi%20Direct
-    vless://b831381d-6324-4d53-ad4f-8cda48b30811@static.outi.ir:30844?security=reality&encryption=none&pbk=pFb0wN_WuDmZ5dT7Nf8ys9fGikrsL8G6E6xjk5OgFCA&fp=chrome&sni=static.outi.ir&spx=%2F&sid=02416cb7&type=tcp#Outi%20Reality
+    vless://b831381d-6324-4d53-ad4f-8cda48b30811@static.outi.ir:30844?security=reality&encryption=none&pbk=pFb0wN_WuDmZ5dT7Nf8ys9fGikrsL8G6E6xjk5OgFCA&fp=chrome&sni=static.outi.ir&spx=%2F&sid=02416cb7&type=tcp&flow=xtls-rprx-vision#Outi%20Reality
   mieru-config.json: |
     {
         "profiles": [
