@@ -22,11 +22,11 @@
         "security": "reality",
         "realitySettings": {
           "show": false,
-          "dest": "se.quattro-tech.ru:443",
+          "dest": "www.google.com:443",
           "xver": 0,
           "serverNames": [
             "static.outi.ir",
-            "se.quattro-tech.ru"
+            "www.google.com"
           ],
           "privateKey": "xmnrPmH0eloVBm1hcdTaxsO09fTWhZGPCkUEVntNEvo",
           "shortIds": [
