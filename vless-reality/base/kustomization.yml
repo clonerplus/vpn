@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
   - deployment.yml
-  - service.yml
 
 configMapGenerator:
   - name: vless-reality-config
