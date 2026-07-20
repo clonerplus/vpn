@@ -4,13 +4,14 @@ metadata:
   name: vless-reality
   labels:
     app: vless-reality
+  annotations:
+    metallb.universe.tf/loadbalancer-ips: "37.59.154.7"
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
     - name: vless-reality
       port: 443
       targetPort: 443
-      nodePort: 30844
       protocol: TCP
   selector:
     app: vless-reality
