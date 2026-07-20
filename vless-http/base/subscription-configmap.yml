@@ -14,6 +14,13 @@ data:
             alias /usr/share/nginx/html/sub;
         }
 
+        location = /mieru/config {
+            auth_basic "Subscription";
+            auth_basic_user_file /etc/nginx/auth/htpasswd;
+            default_type application/json;
+            alias /usr/share/nginx/html/mieru-config.json;
+        }
+
         location / {
             auth_basic "Subscription";
             auth_basic_user_file /etc/nginx/auth/htpasswd;
@@ -26,6 +33,42 @@ data:
   sub: |
     vless://b831381d-6324-4d53-ad4f-8cda48b30811@cdn.outi.ir:443?security=tls&encryption=none&type=httpupgrade&alpn=h2&host=cdn.outi.ir&path=%2Fvless&sni=cdn.outi.ir#Outi%20CDN
     vless://b831381d-6324-4d53-ad4f-8cda48b30811@static.outi.ir:30843?security=tls&encryption=none&type=httpupgrade&alpn=h2,http/1.1&host=static.outi.ir&path=%2Fvless&sni=static.outi.ir#Outi%20Direct
+  mieru-config.json: |
+    {
+        "profiles": [
+            {
+                "profileName": "default",
+                "user": {
+                    "name": "user1",
+                    "password": "CHANGE_ME"
+                },
+                "servers": [
+                    {
+                        "ipAddress": "SERVER_IP",
+                        "domainName": "mieru.outi.ir",
+                        "portBindings": [
+                            {
+                                "port": 30444,
+                                "protocol": "TCP"
+                            }
+                        ]
+                    }
+                ],
+                "mtu": 1400,
+                "multiplexing": {
+                    "level": "MULTIPLEXING_LOW"
+                },
+                "handshakeMode": "HANDSHAKE_STANDARD"
+            }
+        ],
+        "activeProfile": "default",
+        "rpcPort": 8964,
+        "socks5Port": 1080,
+        "loggingLevel": "INFO",
+        "socks5ListenLAN": false,
+        "httpProxyPort": 8080,
+        "httpProxyListenLAN": false
+    }
   index.html: |
     <!DOCTYPE html>
     <html lang="en">
@@ -87,6 +130,10 @@ data:
           background: rgba(34,197,94,0.15);
           color: #22c55e;
         }
+        .badge-mieru {
+          background: rgba(251,146,60,0.15);
+          color: #fb923c;
+        }
         .card-details {
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -147,7 +194,7 @@ data:
     <body>
       <div class="container">
         <h1>Outi VPN</h1>
-        <p class="subtitle">VLESS Configurations</p>
+        <p class="subtitle">VPN Configurations</p>
 
         <div class="card">
           <div class="card-header">
@@ -175,21 +222,51 @@ data:
           </div>
         </div>
 
+        <div class="card">
+          <div class="card-header">
+            <span class="card-name">Outi Mieru</span>
+            <span class="badge badge-mieru">Mieru</span>
+          </div>
+          <div class="card-details">
+            <span><span class="label">Server:</span> mieru.outi.ir</span>
+            <span><span class="label">Port:</span> 443</span>
+            <span><span class="label">Protocol:</span> Mieru (TCP)</span>
+            <span><span class="label">Encryption:</span> XChaCha20-Poly1305</span>
+          </div>
+        </div>
+
         <div class="sub-section">
           <h2>Subscription URL</h2>
           <div class="sub-url" id="subUrl"></div>
           <button class="copy-btn" onclick="copySub()">Copy Subscription URL</button>
         </div>
 
+        <div class="sub-section">
+          <h2>Mieru Config</h2>
+          <div class="sub-url" id="mieruConfigUrl"></div>
+          <button class="copy-btn" onclick="copyMieruConfig()">Copy Mieru Config URL</button>
+          <p style="margin-top:0.75rem;font-size:0.82rem;color:#71717a;">
+            Use with: <code style="color:#a78bfa;">mieru apply config &lt;URL&gt;</code>
+          </p>
+        </div>
+
         <p class="footer">Credentials are required for subscription access.</p>
       </div>
       <script>
         document.getElementById('subUrl').textContent = location.origin + '/sub';
+        document.getElementById('mieruConfigUrl').textContent = location.origin + '/mieru/config';
         function copySub() {
           navigator.clipboard.writeText(location.origin + '/sub').then(() => {
-            const btn = document.querySelector('.copy-btn');
+            const btn = document.querySelectorAll('.copy-btn')[0];
             btn.textContent = 'Copied!';
             setTimeout(() => btn.textContent = 'Copy Subscription URL', 2000);
+          });
+        }
+        function copyMieruConfig() {
+          navigator.clipboard.writeText(location.origin + '/mieru/config').then(() => {
+            const btn = document.querySelectorAll('.copy-btn')[1];
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy Mieru Config URL', 2000);
           });
         }
       </script>

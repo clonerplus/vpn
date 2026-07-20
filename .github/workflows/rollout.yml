@@ -16,6 +16,7 @@ on:
           - vpn-gateway
           - vpn-api
           - vpn-manager
+          - mieru
 
 jobs:
   rollout:

@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mieru
+  labels:
+    app: mieru
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mieru
+  template:
+    metadata:
+      labels:
+        app: mieru
+    spec:
+      initContainers:
+        - name: download-mita
+          image: debian:bookworm-slim
+          command:
+            - /bin/sh
+            - -c
+            - |
+              apt-get update && apt-get install -y --no-install-recommends wget ca-certificates
+              wget -q https://github.com/enfein/mieru/releases/download/v3.34.1/mita_3.34.1_amd64.deb -O /tmp/mita.deb
+              dpkg-deb -x /tmp/mita.deb /tmp/mita-pkg
+              cp /tmp/mita-pkg/usr/bin/mita /shared/mita
+              chmod +x /shared/mita
+          volumeMounts:
+            - name: mita-bin
+              mountPath: /shared
+        - name: apply-config
+          image: alpine:3.20
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cp /shared/mita /usr/local/bin/mita
+              chmod +x /usr/local/bin/mita
+              adduser -D -H -g "" mita || true
+              mkdir -p /etc/mita /var/run/mita /var/lib/mita
+              chown -R mita:mita /var/run/mita /var/lib/mita /etc/mita
+              cp /config-src/config.json /etc/mita/config.json
+          volumeMounts:
+            - name: mita-bin
+              mountPath: /shared
+              readOnly: true
+            - name: config-src
+              mountPath: /config-src
+              readOnly: true
+            - name: mita-data
+              mountPath: /etc/mita
+      containers:
+        - name: mita
+          image: alpine:3.20
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cp /shared/mita /usr/local/bin/mita
+              chmod +x /usr/local/bin/mita
+              adduser -D -H -g "" mita || true
+              mkdir -p /var/run/mita /var/lib/mita
+              chown -R mita:mita /var/run/mita /var/lib/mita /etc/mita
+              mita run &
+              until [ -S /var/run/mita/mita.sock ]; do sleep 1; done
+              mita apply config /etc/mita/config.json
+              mita start
+              wait
+          ports:
+            - name: mieru-tcp
+              containerPort: 443
+              protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - mita status | grep -q RUNNING
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - mita status | grep -q RUNNING
+            initialDelaySeconds: 20
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          volumeMounts:
+            - name: mita-bin
+              mountPath: /shared
+              readOnly: true
+            - name: mita-data
+              mountPath: /etc/mita
+            - name: mita-run
+              mountPath: /var/run/mita
+      volumes:
+        - name: mita-bin
+          emptyDir: {}
+        - name: config-src
+          configMap:
+            name: mieru-config
+        - name: mita-data
+          emptyDir: {}
+        - name: mita-run
+          emptyDir: {}

@@ -33,6 +33,10 @@ spec:
               mountPath: /usr/share/nginx/html/index.html
               subPath: index.html
               readOnly: true
+            - name: subscription
+              mountPath: /usr/share/nginx/html/mieru-config.json
+              subPath: mieru-config.json
+              readOnly: true
             - name: nginx-config
               mountPath: /etc/nginx/auth/htpasswd
               subPath: htpasswd
