@@ -3,14 +3,21 @@ kind: Ingress
 metadata:
   name: vless-http
   annotations:
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/ssl-verify: "false"
 spec:
+  tls:
+    - hosts:
+        - cdn.outi.ir
+      secretName: vless-httpx-outi-tls
   ingressClassName: nginx
   rules:
     - host: cdn.outi.ir
       http:
         paths:
-          - path: /
+          - path: /vless
             pathType: Prefix
             backend:
               service:
@@ -26,6 +33,10 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
 spec:
+  tls:
+    - hosts:
+        - cdn.outi.ir
+      secretName: vless-httpx-outi-tls
   ingressClassName: nginx
   rules:
     - host: cdn.outi.ir
