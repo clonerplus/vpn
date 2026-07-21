@@ -22,11 +22,11 @@
         "security": "reality",
         "realitySettings": {
           "show": false,
-          "dest": "zarebin.ir:443",
+          "dest": "snapp.ir:443",
           "xver": 0,
           "serverNames": [
             "static.outi.ir",
-            "zarebin.ir"
+            "snapp.ir"
           ],
           "privateKey": "xmnrPmH0eloVBm1hcdTaxsO09fTWhZGPCkUEVntNEvo",
           "shortIds": [
