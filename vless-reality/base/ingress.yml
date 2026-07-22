@@ -17,7 +17,7 @@ spec:
                 name: vless-reality
                 port:
                   number: 443
-    - host: chatgpt.com
+    - host: zarebin.ir
       http:
         paths:
           - path: /
