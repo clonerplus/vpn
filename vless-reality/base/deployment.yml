@@ -6,6 +6,11 @@ metadata:
     app: vless-reality
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   selector:
     matchLabels:
       app: vless-reality
@@ -16,6 +21,7 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr-secret
+      terminationGracePeriodSeconds: 30
       containers:
         - name: xray
           image: ghcr.io/xtls/xray-core:latest
@@ -31,11 +37,28 @@ spec:
               readOnly: true
           resources:
             requests:
-              cpu: 100m
-              memory: 128Mi
+              cpu: 50m
+              memory: 64Mi
             limits:
-              cpu: "1"
-              memory: 512Mi
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            tcpSocket:
+              port: vless-reality
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: vless-reality
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            failureThreshold: 3
+          securityContext:
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
       volumes:
         - name: config
           configMap:

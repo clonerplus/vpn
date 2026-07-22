@@ -1,6 +1,11 @@
 {
   "log": {
-    "loglevel": "info"
+    "loglevel": "warning"
+  },
+  "stats": {},
+  "api": {
+    "tag": "api",
+    "services": ["StatsService"]
   },
   "inbounds": [
     {
@@ -38,10 +43,8 @@
       },
       "sniffing": {
         "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
+        "destOverride": ["http", "tls"],
+        "routeOnly": true
       }
     }
   ],
@@ -68,6 +71,10 @@
         "handshake": 4,
         "uplinkOnly": 1
       }
+    },
+    "system": {
+      "statsInboundUplink": true,
+      "statsInboundDownlink": true
     }
   },
   "routing": {
